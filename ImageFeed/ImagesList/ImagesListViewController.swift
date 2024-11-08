@@ -7,8 +7,6 @@
 
 import UIKit
 
-
-
 class ImagesListViewController: UIViewController {
     
     @IBOutlet private var tableView: UITableView!
@@ -25,25 +23,17 @@ class ImagesListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         tableView.rowHeight = 200
     }
     
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+    func makeCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else { return }
-        cell.cellImage.image = image
-        
         let date = dateFormatter.string(from: Date())
-        cell.dateLabel.text = date
-        
         let index = indexPath.row % 2 != 0
-        let buttonImage = index ? UIImage(named: "liked_button_off") : UIImage(named: "liked_button_on")
-        cell.likeButton.setImage(buttonImage, for: .normal)
-            
+        
+        cell.configCell(image, date, index)
     }
-
-
 }
 
 extension ImagesListViewController: UITableViewDataSource {
@@ -56,7 +46,11 @@ extension ImagesListViewController: UITableViewDataSource {
         guard let imageListCell = cell as? ImagesListCell else {
             return UITableViewCell()
         }
-        configCell(for: imageListCell, with: indexPath)
+        let image = UIImage(named: photosName[indexPath.row]) ?? UIImage()
+        let date = dateFormatter.string(from: Date())
+        let index = indexPath.row % 2 != 0
+        
+        imageListCell.configCell(image, date, index)
         return imageListCell
     }
     
@@ -72,7 +66,7 @@ extension ImagesListViewController: UITableViewDelegate {
         let imageInsets = UIEdgeInsets(top: 4, left: 16, bottom: 4, right: 16)
         let imageViewWidth = tableView.bounds.width - imageInsets.left - imageInsets.right
         let imageWidth = image.size.width
-        let scale = imageViewWidth / imageWidth
+        let scale = imageWidth != 0 ? imageViewWidth / imageWidth : 0
         let cellHeight = image.size.height * scale + imageInsets.top + imageInsets.bottom
         
         return cellHeight

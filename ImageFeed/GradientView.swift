@@ -7,20 +7,18 @@
 
 import UIKit
 
-class GradientView: UIView {
+final class GradientView: UIView {
     
     private let gradientLayer = CAGradientLayer()
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
     }
-    
+
     override func layoutSubviews () {
         super.layoutSubviews()
         gradientLayer.frame = bounds
     }
-    
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
