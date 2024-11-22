@@ -17,7 +17,7 @@ final class ProfileViewController: UIViewController {
         makeButton()
     }
     
-    func makeProfileIcon() {
+    private func makeProfileIcon() {
         let profileIconImage = UIImage(resource: .userpick)
         let profileIcon = UIImageView(image: profileIconImage)
         profileIcon.layer.cornerRadius = 35
@@ -32,7 +32,7 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    func makeLabels() {
+    private func makeLabels() {
         let nameLabel = UILabel()
         nameLabel.text = "Екатерина Новикова"
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
@@ -66,7 +66,7 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    func makeButton() {
+    private func makeButton() {
         let exitButton = UIButton.systemButton(
             with: UIImage.exitButton,
             target: self,
