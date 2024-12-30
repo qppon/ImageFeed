@@ -14,7 +14,7 @@ final class ImagesListCell: UITableViewCell {
     @IBOutlet var dateLabel: UILabel!
     
     func configCell(_ image: UIImage, _ date: String, _ liked: Bool) {
-        
+        self.selectionStyle = .none
         let buttonImage = liked ? UIImage(named: "liked_button_off") : UIImage(named: "liked_button_on")
         self.likeButton.setImage(buttonImage, for: .normal)
         self.cellImage.image = image
