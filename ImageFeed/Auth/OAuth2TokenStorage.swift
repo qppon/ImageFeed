@@ -7,12 +7,12 @@
 
 import UIKit
 
-class OAuth2TokenStorage {
+final class OAuth2TokenStorage {
     private let storage: UserDefaults = .standard
     
     var bearerToken: String? {
         get {
-            storage.string(forKey: "bearerToken") ?? ""
+            storage.string(forKey: "bearerToken")
 
         }
         set {

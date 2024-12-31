@@ -11,10 +11,9 @@ protocol AuthViewControllerDelegate: AnyObject {
     func didAuthenticate(_ vc: AuthViewController, didAuthenticateWithCode code: String)
 }
 
-class AuthViewController: UIViewController {
+final class AuthViewController: UIViewController {
     weak var delegate: AuthViewControllerDelegate?
     private let showWebViewSegueIdentifier = "ShowWebView"
-    private let oauth2Servise = OAuth2Service.shared
     
     private func configureBackButton() {
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "Backward")
@@ -25,9 +24,9 @@ class AuthViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureBackButton()
     }
+    
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {

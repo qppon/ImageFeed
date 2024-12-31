@@ -8,16 +8,13 @@
 import UIKit
 import WebKit
 
-enum WebViewConstants {
-    static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
-}
 
 protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
-class WebViewViewController: UIViewController {
+final class WebViewViewController: UIViewController {
     
     weak var delegate: WebViewViewControllerDelegate?
     
@@ -27,7 +24,7 @@ class WebViewViewController: UIViewController {
     
     
     func loadAuthView() {
-        guard var urlComponents = URLComponents(string: WebViewConstants.unsplashAuthorizeURLString) else {
+        guard var urlComponents = URLComponents(string: Constants.unsplashAuthorizeURLString) else {
             print("Ошибка создания urlComponents")
             return
         }
@@ -74,7 +71,6 @@ class WebViewViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
         webView.addObserver(
             self,
             forKeyPath: #keyPath(WKWebView.estimatedProgress),
@@ -82,14 +78,12 @@ class WebViewViewController: UIViewController {
             context: nil)
         updateProgress()
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
+
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        webView.removeObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            context: nil)
+        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
     }
+
 }
 
 extension WebViewViewController: WKNavigationDelegate {
@@ -99,7 +93,6 @@ extension WebViewViewController: WKNavigationDelegate {
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
         if let code = code(from: navigationAction) {
-            
             delegate?.webViewViewController(self, didAuthenticateWithCode: code)
             decisionHandler(.cancel)
         } else {

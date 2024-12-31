@@ -9,9 +9,8 @@ import Foundation
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
-    private init() {
-        
-    }
+    private let storage = OAuth2TokenStorage()
+    private init() {}
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let baseURL = URL(string: "https://unsplash.com"),
@@ -23,7 +22,10 @@ final class OAuth2Service {
                 + "&&code=\(code)"
                 + "&&grant_type=authorization_code",
                 relativeTo: baseURL
-              ) else { return nil }
+              ) else {
+            print("Error makeTokenRequest baseURL")
+            return nil
+        }
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -40,11 +42,14 @@ final class OAuth2Service {
             case .success(let data):
                 do {
                     let oauthTokenResponseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
+                    self.storage.bearerToken = oauthTokenResponseBody.accessToken
                     handler(.success(oauthTokenResponseBody.accessToken))
                 } catch {
+                    print(error)
                     handler(.failure(error))
                 }
             case .failure(let error):
+                print(error)
                 handler(.failure(error))
             }
         }
