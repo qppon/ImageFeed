@@ -6,20 +6,51 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .ypBlack
-        makeProfileIcon()
-        makeLabels()
+        
+        guard let profile = ProfileService.shared.profile else {
+            print("empty profile data")
+            return }
+        
+        makeLabels(profile.fullName, profile.username, profile.bio)
+        
+        profileImageServiceObserver = NotificationCenter.default
+            .addObserver(
+                forName: ProfileImageService.didChangeNotification,
+                object: nil,
+                queue: .main
+            ) { [weak self] _ in
+                guard let self else { return }
+                updateAvatar()
+            }
+        updateAvatar()
+        
         makeButton()
     }
     
-    private func makeProfileIcon() {
-        let profileIconImage = UIImage(resource: .userpick)
-        let profileIcon = UIImageView(image: profileIconImage)
+    private func updateAvatar() {
+        guard
+            let profileImageURL = ProfileImageService.shared.avatarURL,
+            let url = URL(string: profileImageURL)
+        else { return }
+        makeProfileIcon(imageUrl: url)
+    }
+    
+    private func makeProfileIcon(imageUrl: URL) {
+        let processor = RoundCornerImageProcessor(cornerRadius: 20)
+        let placeholder = UIImage(resource: .userpick)
+        let profileIcon = UIImageView()
+        profileIcon.kf.indicatorType = .activity
+        profileIcon.kf.setImage(with: imageUrl, placeholder: placeholder, options: [.processor(processor)])
+        
         profileIcon.layer.cornerRadius = 35
         profileIcon.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(profileIcon)
@@ -32,23 +63,23 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    private func makeLabels() {
+    private func makeLabels(_ name: String, _ userName: String, _ bio: String?) {
         let nameLabel = UILabel()
-        nameLabel.text = "Екатерина Новикова"
+        nameLabel.text = name
         nameLabel.font = UIFont.systemFont(ofSize: 23, weight: .semibold)
         nameLabel.textColor = .white
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameLabel)
         
         let instLabel = UILabel()
-        instLabel.text = "@ekaterina_nov"
+        instLabel.text = userName
         instLabel.font = UIFont.systemFont(ofSize: 13)
         instLabel.textColor = .ypGray
         instLabel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(instLabel)
         
         let helloWorldLabel = UILabel()
-        helloWorldLabel.text = "Hello, world!"
+        helloWorldLabel.text = bio ?? ""
         helloWorldLabel.font = UIFont.systemFont(ofSize: 13)
         helloWorldLabel.textColor = .white
         helloWorldLabel.translatesAutoresizingMaskIntoConstraints = false
