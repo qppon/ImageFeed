@@ -9,8 +9,15 @@ import Foundation
 
 final class OAuth2Service {
     static let shared = OAuth2Service()
-    private let storage = OAuth2TokenStorage()
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
+    
     private init() {}
+    
+    enum AuthServiceError: Error {
+        case invalidRequest
+    }
     
     private func makeOAuthTokenRequest(code: String) -> URLRequest? {
         guard let baseURL = URL(string: "https://unsplash.com"),
@@ -23,7 +30,7 @@ final class OAuth2Service {
                 + "&&grant_type=authorization_code",
                 relativeTo: baseURL
               ) else {
-            print("Error makeTokenRequest baseURL")
+            assertionFailure("Failed to create URL")
             return nil
         }
         
@@ -33,26 +40,32 @@ final class OAuth2Service {
     }
     
     func fetchOauthToken(code: String, handler: @escaping (Result<String, Error>) -> Void) {
-        guard let request = makeOAuthTokenRequest(code: code) else {
-            print("Error makeTokenRequest")
+        assert(Thread.isMainThread)
+        guard lastCode != code else {
+            handler(.failure(AuthServiceError.invalidRequest))
             return
         }
-        let task = URLSession.shared.data(for: request) { result in
+        task?.cancel()
+        lastCode = code
+        
+        
+        guard let request = makeOAuthTokenRequest(code: code) else {
+            handler(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        let task = URLSession.shared.objectTask(for: request) { (result: Result<OAuthTokenResponseBody, Error>) in
             switch result {
             case .success(let data):
-                do {
-                    let oauthTokenResponseBody = try JSONDecoder().decode(OAuthTokenResponseBody.self, from: data)
-                    self.storage.bearerToken = oauthTokenResponseBody.accessToken
-                    handler(.success(oauthTokenResponseBody.accessToken))
-                } catch {
-                    print(error)
-                    handler(.failure(error))
-                }
+                handler(.success(data.accessToken))
             case .failure(let error):
                 print(error)
                 handler(.failure(error))
             }
+            self.task = nil
+            self.lastCode = nil
         }
+        
+        self.task = task
         task.resume()
     }
 }
