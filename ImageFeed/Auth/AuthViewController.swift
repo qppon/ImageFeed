@@ -51,11 +51,11 @@ final class AuthViewController: UIViewController {
         view.backgroundColor = .ypBlack
         view.addSubview(logoImageView)
         NSLayoutConstraint.activate([
-                   logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-                   logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-                   logoImageView.widthAnchor.constraint(equalToConstant: 200),
-                   logoImageView.heightAnchor.constraint(equalToConstant: 200)
-               ])
+            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            logoImageView.widthAnchor.constraint(equalToConstant: 200),
+            logoImageView.heightAnchor.constraint(equalToConstant: 200)
+        ])
         configureBackButton()
     }
     
@@ -82,7 +82,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
             switch result {
             case .success(let token):
                 guard let self else { return }
-                OAuth2TokenStorage().bearerToken = token
+                OAuth2TokenStorage.shared.bearerToken = token
                 delegate?.didAuthenticate(self)
             case .failure:
                 self?.showAuthErrorAlert()

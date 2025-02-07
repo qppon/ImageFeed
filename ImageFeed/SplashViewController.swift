@@ -9,7 +9,7 @@ import UIKit
 import ProgressHUD
 
 final class SplashViewController: UIViewController {
-    private let oauth2TokenStorage = OAuth2TokenStorage()
+    private let oauth2TokenStorage = OAuth2TokenStorage.shared
     private let profileService = ProfileService.shared
     private let showAuthenticationScreenSegueIdentifier = "ShowAuthenticationScreen"
     private let oauth2Service = OAuth2Service.shared
@@ -42,7 +42,8 @@ final class SplashViewController: UIViewController {
     private func switchToAuthViewController() {
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
         guard let authViewController = storyboard.instantiateViewController(withIdentifier: "AuthViewController") as? AuthViewController else {
-            fatalError("AuthViewController не найден в сториборде")
+            assertionFailure("AuthViewController не найден в сториборде")
+            return
         }
         authViewController.delegate = self
         authViewController.modalPresentationStyle = .fullScreen

@@ -8,7 +8,9 @@
 import UIKit
 import SwiftKeychainWrapper
 final class OAuth2TokenStorage {
+    static let shared = OAuth2TokenStorage()
     private let storage: UserDefaults = .standard
+    private init() {}
     
     var bearerToken: String? {
         get {

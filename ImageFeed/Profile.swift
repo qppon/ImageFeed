@@ -15,12 +15,12 @@ struct Profile {
     let loginName: String
     let bio: String?
     
-    init(usename: String, firstName: String, lastName: String, bio: String?) {
-        self.username = usename
+    init(username: String, firstName: String, lastName: String, bio: String?) {
+        self.username = username
         self.firstName = firstName
         self.lastName = lastName
         self.fullName = firstName  + " " + lastName
-        self.loginName = "@" + usename
+        self.loginName = "@" + username
         self.bio = bio
     }
 }

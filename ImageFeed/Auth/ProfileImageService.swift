@@ -24,7 +24,7 @@ enum ProfileError: Error {
 final class ProfileImageService {
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     private var task: URLSessionTask?
-    let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage.shared
     private(set) var avatarURL: String?
     static let shared = ProfileImageService()
     

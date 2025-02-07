@@ -42,31 +42,31 @@ extension URLSession {
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
             }
         })
-
+        
         return task
     }
     
     func objectTask<T: Decodable>(
-            for request: URLRequest,
-            completion: @escaping (Result<T, Error>) -> Void
-        ) -> URLSessionTask {
-            let task = data(for: request) { (result: Result<Data, Error>) in
-                switch result {
-                case .success(let data):
-                    do {
-                        let decoder = JSONDecoder()
-                        let response = try decoder.decode(T.self, from: data)
-                        completion(.success(response))
-                    } catch {
-                        let invalidData = String(data: data, encoding: .utf8) ?? ""
-                        print("Decoding failed. Received data: \(invalidData)")
-                        completion(.failure(NetworkError.invalidData(invalidData)))
-                    }
-                case .failure(let error):
-                    print("No data to decode: \(error.localizedDescription)")
-                    completion(.failure(NetworkError.noData))
+        for request: URLRequest,
+        completion: @escaping (Result<T, Error>) -> Void
+    ) -> URLSessionTask {
+        let task = data(for: request) { (result: Result<Data, Error>) in
+            switch result {
+            case .success(let data):
+                do {
+                    let decoder = JSONDecoder()
+                    let response = try decoder.decode(T.self, from: data)
+                    completion(.success(response))
+                } catch {
+                    let invalidData = String(data: data, encoding: .utf8) ?? ""
+                    print("Decoding failed. Received data: \(invalidData)")
+                    completion(.failure(NetworkError.invalidData(invalidData)))
                 }
+            case .failure(let error):
+                print("No data to decode: \(error.localizedDescription)")
+                completion(.failure(NetworkError.noData))
             }
-            return task
         }
+        return task
+    }
 }
