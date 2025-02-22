@@ -119,7 +119,10 @@ final class ProfileViewController: UIViewController {
         let yesAction = UIAlertAction(title: "Да", style: .default) { _ in
             self.profileLogoutService.logout()
             
-            guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
+            guard let window = UIApplication.shared.windows.first else {
+                assertionFailure("Invalid Configuration")
+                return
+            }
             let authViewController = UIStoryboard(name: "Main", bundle: .main)
                 .instantiateViewController(withIdentifier: "AuthViewController")
             window.rootViewController = authViewController

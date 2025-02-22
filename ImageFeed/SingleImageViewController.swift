@@ -76,6 +76,7 @@ final class SingleImageViewController: UIViewController {
                             UIBlockingProgressHUD.dismiss()
                             self?.image = value.image
                         case .failure:
+                            UIBlockingProgressHUD.dismiss()
                             print("error")
                         }
                     }

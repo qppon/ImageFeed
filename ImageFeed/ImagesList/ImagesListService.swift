@@ -18,7 +18,7 @@ final class ImagesListService {
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         
-        if isLike == false {
+        if !isLike {
             unlikePhoto(photoId: photoId, completion: completion)
         } else {
             likePhoto(photoId: photoId, completion: completion)
@@ -55,10 +55,10 @@ final class ImagesListService {
     }
     
     func updatePhoto(photoId: String) -> Void {
-        if let index = self.photos.firstIndex(where: { $0.id == photoId }) {
-            var photo = self.photos[index]
+        if let index = photos.firstIndex(where: { $0.id == photoId }) {
+            var photo = photos[index]
             photo.isLiked = !photo.isLiked
-            self.photos[index] = photo
+            photos[index] = photo
         }
     }
     
@@ -111,8 +111,7 @@ final class ImagesListService {
             switch result {
             case .success(let photosResult):
                 for photoResult in photosResult {
-                    let photo = Photo(photoResult: photoResult)
-                    self?.photos.append(photo)
+                    self?.photos.append(contentsOf: photosResult.map(Photo.init))
                 }
                 NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
                 self?.lastLoadedPage = nextPage

@@ -12,7 +12,7 @@ class ImagesListViewController: UIViewController {
     @IBOutlet private var tableView: UITableView!
     
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
-    var imageListService = ImagesListService.shared
+    private var imageListService = ImagesListService.shared
     
     private var photos: [Photo] = []
     
