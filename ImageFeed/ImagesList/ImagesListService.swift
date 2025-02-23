@@ -110,9 +110,7 @@ final class ImagesListService {
         let task = URLSession.shared.objectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) in
             switch result {
             case .success(let photosResult):
-                for photoResult in photosResult {
-                    self?.photos.append(contentsOf: photosResult.map(Photo.init))
-                }
+                self?.photos.append(contentsOf: photosResult.map(Photo.init))
                 NotificationCenter.default.post(name: Self.didChangeNotification, object: self)
                 self?.lastLoadedPage = nextPage
             case .failure(let error):
