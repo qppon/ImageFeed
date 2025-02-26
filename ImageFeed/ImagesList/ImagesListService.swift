@@ -139,5 +139,6 @@ final class ImagesListService {
     
     func deletImagesList() {
         photos = []
+        lastLoadedPage = nil
     }
 }
