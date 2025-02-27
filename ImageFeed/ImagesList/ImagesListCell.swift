@@ -7,16 +7,16 @@
 import UIKit
 
 protocol ImagesListCellDelegate: AnyObject {
-    func cellDidTapLike(_ cell: ImagesListCell)
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
 
-final class ImagesListCell: UITableViewCell {
+public final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
     var delegate: ImagesListCellDelegate?
     
     
     @IBAction private func didTapLikeButton(_ sender: Any) {
-        delegate?.cellDidTapLike(self)
+        delegate?.imageListCellDidTapLike(self)
     }
     @IBOutlet var cellImage: UIImageView!
     @IBOutlet var likeButton: UIButton!
@@ -30,7 +30,7 @@ final class ImagesListCell: UITableViewCell {
         self.dateLabel.text = date
     }
     
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
         
         cellImage.kf.cancelDownloadTask()

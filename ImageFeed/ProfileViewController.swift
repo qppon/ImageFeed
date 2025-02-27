@@ -26,16 +26,17 @@ final class ProfileViewController: UIViewController & ProfileViewControllerProto
         
         view.backgroundColor = .ypBlack
         
-        guard let profile = presenter?.didUpdateProfileDetails() else {
-            print("empty profile data")
-            return }
-        
-        makeLabels(profile.fullName, profile.username, profile.bio)
+
         
         presenter?.viewDidLoad()
         updateAvatar()
         
         makeButton()
+        
+        guard let profile = presenter?.didUpdateProfileDetails() else {
+            print("empty profile data")
+            return }
+        makeLabels(profile.fullName, profile.username, profile.bio)
     }
     
     func updateAvatar() {
