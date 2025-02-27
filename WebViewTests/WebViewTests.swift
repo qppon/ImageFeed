@@ -5,6 +5,7 @@
 //  Created by Jojo Smith on 2/26/25.
 //
 
+@testable import ImageFeed
 import XCTest
 
 final class WebViewTests: XCTestCase {

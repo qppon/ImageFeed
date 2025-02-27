@@ -6,14 +6,15 @@
 //
 
 import UIKit
+@testable import ImageFeed
 
 final class ImagesListServiceSpy: ImagesListServiceProtocol {
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, any Error>) -> Void) {
-//        if emulateError {
-//            completion(.failure(TestError.test))
-//        } else {
-//            completion(.success(Void()))
-//        }
+        if emulateError {
+            completion(.failure(TestError.test))
+        } else {
+            completion(.success(()))
+        }
     }
     
     

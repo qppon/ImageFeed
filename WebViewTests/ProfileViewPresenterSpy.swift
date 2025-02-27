@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import ImageFeed
+@testable import ImageFeed
 
 final class ProfileViewPresenterSpy: ProfileViewPresenterProtocol {
     var viewDidLoadCalled: Bool = false

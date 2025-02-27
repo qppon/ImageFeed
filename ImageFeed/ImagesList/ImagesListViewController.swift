@@ -74,8 +74,6 @@ class ImagesListViewController: UIViewController & ImagesListViewControllerProto
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
-        tableView.rowHeight = 200
         
         presenter?.viewDidLoad()
     }
@@ -116,7 +114,7 @@ class ImagesListViewController: UIViewController & ImagesListViewControllerProto
             }
             cell.dateLabel.text = dateFormatter.string(from: Date())
             
-            let likeImage = UIImage(resource: photo.isLiked ? .likedButtonOn : .likedButtonOff)
+            let likeImage = UIImage(resource: photo.isLiked ? .likeButtonOn : .likeButtonOff)
             cell.likeButton.setImage(likeImage, for: .normal)
         }
     }

@@ -5,6 +5,7 @@
 //  Created by Jojo Smith on 2/27/25.
 //
 
+@testable import ImageFeed
 import Foundation
 
 final class ImagesListViewControllerSpy: ImagesListViewControllerProtocol {

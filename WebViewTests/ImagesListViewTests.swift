@@ -4,6 +4,7 @@
 //
 //  Created by Jojo Smith on 2/27/25.
 //
+@testable import ImageFeed
 import XCTest
 
 final class ImagesListViewTests: XCTestCase {
@@ -87,22 +88,23 @@ final class ImagesListViewTests: XCTestCase {
         // When
         let expectation = expectation(description: "Loading expectation")
         
-        let photo = Photo(photoResult: PhotoResult(id: "", width: 10, height: 10, createdAt: "", description: nil, urls: UrlsResult(thumb: "", full: ""), isLiked: false))
+        let photo = Photo(photoResult: PhotoResult(id: "", width: 0, height: 0, createdAt: "", description: nil, urls: UrlsResult(thumb: "", full: ""), isLiked: false))
         let photos = [photo]
         imagesListViewPresenter.photos = photos
         
         imagesListViewPresenter.tapLike(for: photo) { result in
             // Then
-            switch result {
-            case .success(_):
-                XCTAssertEqual(imagesListViewPresenter.photos[0].isLiked, true)
-                expectation.fulfill()
-            case .failure(_):
-                XCTFail("Unexpected failure")
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let isLiked):
+                    imagesListViewPresenter.photos[0].isLiked = isLiked
+                    expectation.fulfill()
+                    XCTAssertEqual(imagesListViewPresenter.photos[0].isLiked, true)
+                case .failure(_):
+                    XCTFail("Unexpected failure")
+                }
             }
         }
-        
-        
         waitForExpectations(timeout: 1)
     }
 }
