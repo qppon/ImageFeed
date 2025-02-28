@@ -34,8 +34,6 @@ final class WebViewViewController: UIViewController & WebViewViewControllerProto
         webView.load(request)
     }
     
-
-    
     override func observeValue(
         forKeyPath keyPath: String?,
         of object: Any?,

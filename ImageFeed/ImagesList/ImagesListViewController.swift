@@ -14,7 +14,7 @@ public protocol ImagesListViewControllerProtocol: AnyObject {
     func updateTableViewAnimated()
 }
 
-class ImagesListViewController: UIViewController & ImagesListViewControllerProtocol {
+final class ImagesListViewController: UIViewController & ImagesListViewControllerProtocol {
     
     
     var presenter: ImagesListViewPresenterProtocol?
@@ -145,8 +145,8 @@ extension ImagesListViewController: UITableViewDataSource {
 
 extension ImagesListViewController: ImagesListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
-        guard let indexPath = tableView.indexPath(for: cell) else { return }
-        guard let photo = presenter?.photos[indexPath.row] else { return }
+        guard let indexPath = tableView.indexPath(for: cell),
+              let photo = presenter?.photos[indexPath.row] else { return }
         
         UIBlockingProgressHUD.show()
         

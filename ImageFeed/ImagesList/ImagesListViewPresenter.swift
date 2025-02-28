@@ -42,8 +42,8 @@ final class ImagesListViewPresenter: ImagesListViewPresenterProtocol {
     
     func didUpdateTableViewAnimated() {
         let oldCount = photos.count
-        guard let newCount = imagesListService?.photos.count else { return }
-        guard let photos = imagesListService?.photos else { return }
+        guard let newCount = imagesListService?.photos.count,
+                let photos = imagesListService?.photos else { return }
         self.photos = photos
         if newCount != oldCount {
             view?.oldCount = oldCount

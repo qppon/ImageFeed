@@ -5,10 +5,7 @@
 //  Created by Jojo Smith on 2/26/25.
 //
 
-import Foundation
 import UIKit
-
-import Foundation
 
 public protocol ProfileViewPresenterProtocol {
     var view: ProfileViewControllerProtocol? { get set }
@@ -20,15 +17,11 @@ public protocol ProfileViewPresenterProtocol {
 
 final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
-    
     weak var view: ProfileViewControllerProtocol?
-    
-    
     
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private let profileLogoutService = ProfileLogoutService.shared
-    
     
     func viewDidLoad() {
         profileImageServiceObserver()
@@ -54,7 +47,6 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     func didLogout() {
         profileLogoutService.logout()
     }
-    
     
     private func profileImageServiceObserver() {
         NotificationCenter.default.addObserver(

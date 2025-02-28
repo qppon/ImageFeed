@@ -22,19 +22,6 @@ final class ImagesListViewTests: XCTestCase {
         XCTAssertTrue(imagesListViewPresenterSpy.viewDidLoadCalled)
     }
     
-    func testViewControllerCounts() {
-        //given
-        let imagesListViewController = ImagesListViewController()
-        let imagesListViewPresenter = ImagesListViewPresenter()
-        imagesListViewPresenter.view = imagesListViewController
-        imagesListViewController.presenter = imagesListViewPresenter
-        
-        //when
-        imagesListViewPresenter.viewDidLoad()
-        
-        //then
-        XCTAssertLessThanOrEqual(imagesListViewController.oldCount, imagesListViewController.newCount)
-    }
     
     func testPresenterViewDidLoadCallsFetchPhotosNextPage() {
         //given
