@@ -8,8 +8,16 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerProtocol:  AnyObject {
+    var presenter: ProfileViewPresenterProtocol? { get set }
+    func updateAvatar()
+    func switchToSplashViewController()
+}
+
+final class ProfileViewController: UIViewController & ProfileViewControllerProtocol {
     private let profileLogoutService = ProfileLogoutService.shared
+    
+    var presenter: ProfileViewPresenterProtocol?
     
     private var profileImageServiceObserver: NSObjectProtocol?
     
@@ -18,31 +26,21 @@ final class ProfileViewController: UIViewController {
         
         view.backgroundColor = .ypBlack
         
-        guard let profile = ProfileService.shared.profile else {
-            print("empty profile data")
-            return }
+
         
-        makeLabels(profile.fullName, profile.username, profile.bio)
-        
-        profileImageServiceObserver = NotificationCenter.default
-            .addObserver(
-                forName: ProfileImageService.didChangeNotification,
-                object: nil,
-                queue: .main
-            ) { [weak self] _ in
-                guard let self else { return }
-                updateAvatar()
-            }
+        presenter?.viewDidLoad()
         updateAvatar()
         
         makeButton()
+        
+        guard let profile = presenter?.didUpdateProfileDetails() else {
+            print("empty profile data")
+            return }
+        makeLabels(profile.fullName, profile.username, profile.bio)
     }
     
-    private func updateAvatar() {
-        guard
-            let profileImageURL = ProfileImageService.shared.avatarURL,
-            let url = URL(string: profileImageURL)
-        else { return }
+    func updateAvatar() {
+        guard let url = presenter?.didUpdateAvatar() else { return }
         makeProfileIcon(imageUrl: url)
     }
     
@@ -105,6 +103,7 @@ final class ProfileViewController: UIViewController {
             target: self,
             action: #selector(self.didTapButton)
         )
+        exitButton.accessibilityIdentifier = "logoutButton"
         exitButton.tintColor = .ypRed
         exitButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(exitButton)
@@ -117,17 +116,8 @@ final class ProfileViewController: UIViewController {
         let alert = UIAlertController(title: "Пока, пока!", message: "Уверены что хотите выйти?", preferredStyle: .alert)
         
         let yesAction = UIAlertAction(title: "Да", style: .default) { _ in
-            self.profileLogoutService.logout()
-            
-            guard let window = UIApplication.shared.windows.first else {
-                assertionFailure("Invalid Configuration")
-                return
-            }
-            let authViewController = UIStoryboard(name: "Main", bundle: .main)
-                .instantiateViewController(withIdentifier: "AuthViewController")
-            window.rootViewController = authViewController
-            
-            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: nil)
+            self.presenter?.didLogout()
+            self.switchToSplashViewController()
         }
         
         let noAction = UIAlertAction(title: "Нет", style: .default, handler: nil)
@@ -136,5 +126,17 @@ final class ProfileViewController: UIViewController {
         alert.addAction(noAction)
         
         present(alert, animated: true, completion: nil)
+    }
+    
+    
+    func switchToSplashViewController() {
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Invalid Configuration")
+            return
+        }
+        
+        let splashViewController = SplashViewController()
+        window.rootViewController = splashViewController
+        UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: {}, completion: nil)
     }
 }

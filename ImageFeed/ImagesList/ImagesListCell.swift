@@ -7,7 +7,7 @@
 import UIKit
 
 protocol ImagesListCellDelegate: AnyObject {
-    func cellDidTapLike(_ cell: ImagesListCell)
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
 
 final class ImagesListCell: UITableViewCell {
@@ -16,7 +16,7 @@ final class ImagesListCell: UITableViewCell {
     
     
     @IBAction private func didTapLikeButton(_ sender: Any) {
-        delegate?.cellDidTapLike(self)
+        delegate?.imageListCellDidTapLike(self)
     }
     @IBOutlet var cellImage: UIImageView!
     @IBOutlet var likeButton: UIButton!
@@ -24,19 +24,19 @@ final class ImagesListCell: UITableViewCell {
     
     func configCell(_ image: UIImage, _ date: String, _ liked: Bool) {
         self.selectionStyle = .none
-        let buttonImage = liked ? UIImage(named: "liked_button_off") : UIImage(named: "liked_button_on")
+        let buttonImage = liked ? UIImage(named: "likeButtonOff") : UIImage(named: "likeButtonOn")
         self.likeButton.setImage(buttonImage, for: .normal)
         self.cellImage.image = image
         self.dateLabel.text = date
     }
     
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
         
         cellImage.kf.cancelDownloadTask()
     }
     
     func setIsLiked(isLiked: Bool) {
-        likeButton.setImage(UIImage(resource: isLiked ? .likedButtonOn : .likedButtonOff), for: .normal)
+        likeButton.setImage(UIImage(named: isLiked ? "likeButtonOn" : "likeButtonOff"), for: .normal)
     }
 }
