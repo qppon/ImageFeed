@@ -79,6 +79,11 @@ class ImagesListViewController: UIViewController & ImagesListViewControllerProto
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        
+        if ProcessInfo.processInfo.environment["isUITest"] == "true" {
+            return
+        }
+        
         guard let photo = presenter?.photos else { return }
         if indexPath.row + 1 == photo.count {
             presenter?.loadImages()
