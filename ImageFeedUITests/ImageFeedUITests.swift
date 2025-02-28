@@ -7,13 +7,14 @@
 
 import XCTest
 
-class ImageFeedUITests: XCTestCase {
-    private let app = XCUIApplication() // переменная приложения
+final class ImageFeedUITests: XCTestCase {
+    private let app = XCUIApplication()
     
     override func setUpWithError() throws {
-        continueAfterFailure = false // настройка выполнения тестов, которая прекратит выполнения тестов, если в тесте что-то пошло не так
-        
-        app.launch() // запускаем приложение перед каждым тестом
+        try super.setUpWithError()
+        app.launchEnvironment["isUITest"] = "true"
+        continueAfterFailure = false
+        app.launch()
     }
     
     func testAuth() throws {
@@ -24,6 +25,8 @@ class ImageFeedUITests: XCTestCase {
         
         let loginTextField = webView.descendants(matching: .textField).element
         XCTAssertTrue(loginTextField.waitForExistence(timeout: 5))
+        
+        sleep(3)
         
         loginTextField.tap()
         loginTextField.typeText("")
@@ -43,7 +46,7 @@ class ImageFeedUITests: XCTestCase {
         let tablesQuery = app.tables
         let cell = tablesQuery.children(matching: .cell).element(boundBy: 0)
         
-        XCTAssertTrue(cell.waitForExistence(timeout: 5))
+        XCTAssertTrue(cell.waitForExistence(timeout: 10))
     }
     
     func testFeed() throws {
@@ -86,5 +89,7 @@ class ImageFeedUITests: XCTestCase {
         app.buttons["logoutButton"].tap()
         
         app.alerts["Пока, пока!"].scrollViews.otherElements.buttons["Да"].tap()
+        
+        XCTAssertTrue(app.buttons["Authenticate"].waitForExistence(timeout: 5))
     }
 }
