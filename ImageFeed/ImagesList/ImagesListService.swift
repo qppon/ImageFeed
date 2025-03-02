@@ -7,7 +7,13 @@
 
 import Foundation
 
-final class ImagesListService {
+public protocol ImagesListServiceProtocol: AnyObject {
+    func fetchPhotosNextPage()
+    var photos: [Photo] { get }
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void)
+}
+
+final class ImagesListService: ImagesListServiceProtocol {
     private(set) var photos: [Photo] = []
     
     private var lastLoadedPage: Int?
@@ -139,5 +145,6 @@ final class ImagesListService {
     
     func deletImagesList() {
         photos = []
+        lastLoadedPage = nil
     }
 }
